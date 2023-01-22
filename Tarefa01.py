@@ -29,7 +29,7 @@ plt.xlabel('x')
 plt.ylabel('y')
   
 # Colocando um titulo no gráfico que sera gerado
-plt.title('Gráfico adimensional de y(t) = cos(m*t) para m = 1, 2 and 3')
+plt.title('Gráfico adimensional de y(t) = cos(m*t) para m = 1, 2 e 3')
 
 # Criando uma legenda para o gráfico e posicionando ela no canto superior esquerdo
 plt.legend(loc='upper left')
