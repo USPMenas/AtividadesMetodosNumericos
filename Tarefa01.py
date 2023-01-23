@@ -44,6 +44,8 @@ def quest2_1():
     # Definindo o número de passos minimo
     n = [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
     h = np.zeros(len(n))
+    erros = np.zeros(len(n))
+    ordemP = np.zeros(len(n))
     
     # Definindo o intervalo a ser utilizado, sendo o modelo do intervalo igual a [a,b]
     a = 0
@@ -55,25 +57,43 @@ def quest2_1():
         
     # Derivada associada a solução exata, solução exata escolhida: y(t) = sin(2π*t)*e^(−0.2)*t
     
-    y_inicial = 0 # Valor de y(0)
-    y_numerico = 0 + y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
     t_inicial = 0 # Valor inicial do passo no eixo das abcissas
+    y_inicial =  # Valor de y'(t0,y0)
+    y_numerico = y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
     
-    #Aplicação do método de Euler para todos os valores de n 
+    # Aplicação do método de Euler para todos os valores de n 
     for i in range(len(n)):
-    #O laço externo serve para alternar entre os diferentes valores de n propostos
+    # O laço externo serve para alternar entre os diferentes valores de n propostos
     
         # Laço interno para calcular o valor do y númerico para cada valor de n
-        for j in range(n[i]):
+        for j in range(n[i]-1):
             t_inicial += h[i]
             y_linha = 2*np.pi*np.cos(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial)-0.2*(np.sin(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial))
             y_numerico += h[i] * y_linha
         
         y_real = np.sin(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial)
-        erro = np.absolute(y_real - y_numerico)
-        print(f'{erro:.4e}')
+        erros[i] = np.absolute(y_real - y_numerico)
+        #print(f'{erros[i]:.4e}')
+        
+        # Reiniciando os valores para um novo valor de tamanho de passo
         t_inicial = 0
-        y_numerico = 0 + y_inicial
+        y_numerico = y_inicial
+        
+    # Encontrando  a constante r
+    r = h[0] / h[1]
+        
+    for i in range(len(n)-1):
+        ordemP[i+1] = np.log2(erros[i] / erros[i+1]) / np.log2(r)
+        
+    print(f"n \t &&& \t h_n \t\t &&& \t |e(T,h_n)| \t &&& \t ordem P")
+    for i in range(len(n)):
+        
+        if i == 0:
+            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t ------")
+        else:
+            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t {ordemP[i]:.5}")
+        
+    
                                         
 
 #QUESTAO 2.2
