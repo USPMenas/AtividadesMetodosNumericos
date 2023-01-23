@@ -58,7 +58,7 @@ def quest2_1():
     # Derivada associada a solução exata, solução exata escolhida: y(t) = sin(2π*t)*e^(−0.2)*t
     
     t_inicial = 0 # Valor inicial do passo no eixo das abcissas
-    y_inicial =  # Valor de y'(t0,y0)
+    y_inicial = 0 # Valor de y'(t0,y0)
     y_numerico = y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
     
     # Aplicação do método de Euler para todos os valores de n 
@@ -66,10 +66,10 @@ def quest2_1():
     # O laço externo serve para alternar entre os diferentes valores de n propostos
     
         # Laço interno para calcular o valor do y númerico para cada valor de n
-        for j in range(n[i]-1):
-            t_inicial += h[i]
+        for j in range(n[i]):
             y_linha = 2*np.pi*np.cos(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial)-0.2*(np.sin(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial))
             y_numerico += h[i] * y_linha
+            t_inicial += h[i]
         
         y_real = np.sin(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial)
         erros[i] = np.absolute(y_real - y_numerico)
@@ -89,9 +89,9 @@ def quest2_1():
     for i in range(len(n)):
         
         if i == 0:
-            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t ------")
+            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t ------ \t\t \\\\")
         else:
-            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t {ordemP[i]:.5}")
+            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t {ordemP[i]:.5} \t\t \\\\")
         
     
                                         
