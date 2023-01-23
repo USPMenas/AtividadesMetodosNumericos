@@ -57,55 +57,178 @@ def quest2_1():
         
     # Derivada associada a solução exata, solução exata escolhida: y(t) = sin(2π*t)*e^(−0.2)*t
     
-    t_inicial = 0 # Valor inicial do passo no eixo das abcissas
     y_inicial = 0 # Valor de y'(t0,y0)
-    y_numerico = y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
     
     # Aplicação do método de Euler para todos os valores de n 
     for i in range(len(n)):
     # O laço externo serve para alternar entre os diferentes valores de n propostos
-    
+        # Reiniciando os valores para um novo valor de tamanho de passo
+        t_inicial = 0 # Valor inicial do passo no eixo das abcissas
+        y_numerico = y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
+        
         # Laço interno para calcular o valor do y númerico para cada valor de n
         for j in range(n[i]):
+            # y_linha é a derivada obtida pela equação diferencial
             y_linha = 2*np.pi*np.cos(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial)-0.2*(np.sin(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial))
             y_numerico += h[i] * y_linha
             t_inicial += h[i]
         
-        y_real = np.sin(2*np.pi*t_inicial)*np.exp(-0.2*t_inicial)
+        t_final = t_inicial
+        y_real = np.sin(2*np.pi*t_final)*np.exp(-0.2*t_final)
         erros[i] = np.absolute(y_real - y_numerico)
-        #print(f'{erros[i]:.4e}')
-        
-        # Reiniciando os valores para um novo valor de tamanho de passo
-        t_inicial = 0
-        y_numerico = y_inicial
-        
-    # Encontrando  a constante r
-    r = h[0] / h[1]
-        
+            
     for i in range(len(n)-1):
-        ordemP[i+1] = np.log2(erros[i] / erros[i+1]) / np.log2(r)
+        ordemP[i+1] = np.log2(erros[i] / erros[i+1]) / np.log2(h[i] / h[i+1])
         
-    print(f"n \t &&& \t h_n \t\t &&& \t |e(T,h_n)| \t &&& \t ordem P")
-    for i in range(len(n)):
-        
-        if i == 0:
-            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t ------ \t\t \\\\")
-        else:
-            print(f"{n[i]} \t &&& \t {h[i]:.4e} \t &&& \t {erros[i]:.4e} \t &&& \t {ordemP[i]:.5} \t\t \\\\")
-        
-    
+    # Gerando a tabela de convergência númerica para ser utilizada no Latex
+    imprimirTabela(n, h, erros, ordemP)  
                                         
 
 #QUESTAO 2.2
-
+def quest2_2():
+    # Definindo o número de passos minimo
+    n = [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
+    h = np.zeros(len(n))
+    erros = np.zeros(len(n))
+    ordemP = np.zeros(len(n))
+    
+    # Definindo os valores t para o intervalo a ser utilizado, sendo o modelo do intervalo igual a [a,b]
+    a = 0
+    b = 1
+    
+    # Definindo o tamanho do passo
+    for i in range(len(n)):
+        h[i] = (b-a)/n[i]
+        
+    # dx/dt = xy
+    # dy/dt = y - x^2
+    # soluções exatas = x(t) = e^(-t^2/2) e y(t) = t * e^(-t^2/2)
+    
+    y_inicial = 1 # Valor de y'(t0,y0)
+    x_inicial = 1 # Valor de x'(t0,y0)
+    
+    # Aplicação do método de Euler para todos os valores de n 
+    for i in range(len(n)):
+    # O laço externo serve para alternar entre os diferentes valores de n propostos
+        # Reiniciando os valores para um novo valor de tamanho de passo
+        t_inicial = 0 # Valor inicial do passo no eixo das abcissas
+        y_numerico = y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
+        x_numerico = x_inicial # Valor inicial do x_numerico na extremidade inferior [a, ...]
+        
+        # Laço interno para calcular o valor do y númerico para cada valor de n
+        for j in range(n[i]):
+            # y_linha é a derivada obtida pela equação diferencial
+            y_linha = -x_numerico
+            
+            # x_linha é a derivada obtida pela equação diferencial
+            x_linha = y_numerico
+            
+            y_numerico += h[i] * y_linha
+            x_numerico += h[i] * x_linha
+            
+            t_inicial += h[i]
+        
+        t_final = t_inicial
+        y_real = np.cos(t_final) - np.sin(t_final)
+        x_real = np.sin(t_final) + np.cos(t_final)
+        
+        # Aplicando a norma do máximo para apresentar o erro encontrado
+        erros[i] = max(np.absolute(y_real - y_numerico), np.absolute(x_real - x_numerico))
+            
+    for i in range(len(n)-1):
+        ordemP[i+1] = np.log2(erros[i] / erros[i+1]) / np.log2(h[i] / h[i+1])
+        
+    # Gerando a tabela de convergência númerica para ser utilizada no Latex
+    imprimirTabela(n, h, erros, ordemP)
 
 #QUESTAO 2.3
-
+def quest2_3():
+     # Definindo o número de passos minimo
+    n = [64, 128, 256, 512, 1024, 2048, 4096, 8192, 16384]
+    h = np.zeros(len(n))
+    erros = np.zeros(len(n))
+    ordemP = np.zeros(len(n))
+    
+    # Definindo os valores t para o intervalo a ser utilizado, sendo o modelo do intervalo igual a [a,b]
+    a = 0
+    b = 1
+    
+    # Definindo o tamanho do passo
+    for i in range(len(n)):
+        h[i] = (b-a)/n[i]
+        
+    # dx/dt = 3 * x(t) - 4 * y(t)
+    # dy/dt = x(t) - y(t)
+    # soluções exatas = x(t) = 2*t*e^(t) + e^(t) e y(t) = t*e^(t)
+    
+    y_inicial = 0 # Valor de y'(t0,y0)
+    x_inicial = 1 # Valor de x'(t0,y0)
+    
+    # Aplicação do método de Euler para todos os valores de n 
+    for i in range(len(n)):
+    # O laço externo serve para alternar entre os diferentes valores de n propostos
+        # Reiniciando os valores para um novo valor de tamanho de passo
+        t_inicial = 0 # Valor inicial do passo no eixo das abcissas
+        y_numerico = y_inicial # Valor inicial do y_numerico na extremidade inferior [a, ...]
+        x_numerico = x_inicial # Valor inicial do x_numerico na extremidade inferior [a, ...]
+        
+        # Laço interno para calcular o valor do y númerico para cada valor de n
+        for j in range(n[i]):
+            # y_linha é a derivada obtida pela equação diferencial
+            y_linha = x_numerico - y_numerico
+            
+            # x_linha é a derivada obtida pela equação diferencial
+            x_linha = 3 * x_numerico - 4 * y_numerico
+            
+            y_numerico += h[i] * y_linha
+            x_numerico += h[i] * x_linha
+            
+            t_inicial += h[i]
+        
+        t_final = t_inicial
+        print(t_final)
+        y_real = t_final*np.exp(t_final)
+        x_real = 2*t_final*np.exp(t_final) + np.exp(t_final)
+        
+        # Aplicando a norma do máximo para apresentar o erro encontrado
+        erros[i] = np.sqrt((x_real - x_numerico) ** 2 + (y_real - y_numerico) ** 2)
+            
+    for i in range(len(n)-1):
+        ordemP[i+1] = np.log2(erros[i] / erros[i+1]) / np.log2(h[i] / h[i+1])
+        
+    # Gerando a tabela de convergência númerica para ser utilizada no Latex
+    imprimirTabela(n, h, erros, ordemP)
+            
+def imprimirTabela(n, h, erros, ordemP):
+    print(f"n \t &&& \t h_n \t\t &&& \t |e(T,h_n)| \t &&& \t ordem P")
+    
+    for i in range(len(n)):
+        
+        if i == 0:
+            print(f"{n[i]}\t&&&\t{h[i]:.4e}\t&&&\t{erros[i]:.4e}\t&&&\t------\t\\\\")
+        else:
+            print(f"{n[i]}\t&&&\t{h[i]:.4e}\t&&&\t{erros[i]:.4e}\t&&&\t{ordemP[i]:.5}\t\\\\")
 
 #Function main utilizada para unir o fluxo de dados da resolução das questões para o usuário.
 
 def main():
-    #quest1()
-    quest2_1()
+    print("""
+          1. Gráfico para y(t) = cos(mt), -pi <= t <= pi, m = 1, 2 e 3.\n
+          2. Solução manufaturada pelo Método de Euler com uma variável de estado.\n 
+          3. Solução manufaturada pelo Método de Euler com duas variáveis de estado, utilizando a norma da máxima.\n 
+          4. Solução manufatura pelo Método de Euler com duas variáveis de estado, utilizando a norma euclidiana.\n\n
+        """)
     
+    opt = input('Opção selecionada: ')
+    
+    if(opt == 1):
+        quest1()
+    elif(opt == 2):
+
+        #quest1()
+        #quest2_1()
+        quest2_2()
+        #quest2_3()
+        
 main()
+
